@@ -1,2 +1,0 @@
-#!/bin/sh
-java -XX:+UnlockExperimentalVMOptions -XX:+UseZGC -XX:ZUncommitDelay=180 -XX:MinHeapFreeRatio=1 -XX:MaxHeapFreeRatio=60 -Duser.timezone=America/Fortaleza -Djava.security.egd=file:/dev/./urandom -Djava.io.tmpdir=/tmp XMS_MEM XMX_MEM -Dspring.config.location=/application.properties -jar /foodsolution-cadastro.jar
