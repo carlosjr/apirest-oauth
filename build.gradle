@@ -1,0 +1,79 @@
+buildscript {
+    dependencies { 
+		classpath("org.postgresql:postgresql:42.2.5")
+    }
+}
+
+
+plugins {
+	id 'org.springframework.boot' version '2.4.0'
+	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+	id 'java'
+	id "org.flywaydb.flyway" version "7.5.3"
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'org.flywaydb.flyway'
+
+compileJava.options.encoding = "UTF-8"
+compileTestJava.options.encoding = "UTF-8"
+
+bootJar {
+    baseName = 'apirest-oauth'
+    version = '1.0'
+}
+
+group = 'br.com.cjr'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '14'
+
+repositories {
+	mavenCentral()
+}
+
+def props = new Properties()
+file("src/main/resources/application.properties").withInputStream { props.load(it) }
+
+flyway {
+    url = props.getProperty("spring.datasource.url")
+    user = props.getProperty("spring.datasource.username")
+    password = props.getProperty("spring.datasource.password")
+    cleanDisabled = true
+    outOfOrder = true
+    baselineOnMigrate = true
+    validateOnMigrate = false
+    configurations = [ 'flywayMigration' ]
+}
+
+configurations {
+    flywayMigration
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-cache'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation('org.postgresql:postgresql:42.2.5')
+
+    compile('org.springframework.security.oauth:spring-security-oauth2:2.3.5.RELEASE')
+	compile('org.springframework.boot:spring-boot-starter-oauth2-client')
+	compile('org.springframework.security:spring-security-jwt:1.1.1.RELEASE')
+	
+    compile('io.springfox:springfox-swagger2:2.9.2')
+    compile('io.springfox:springfox-swagger-ui:2.9.2')
+    
+    compile('org.apache.commons:commons-lang3:3.9')
+    
+	
+	//developmentOnly 'org.springframework.boot:spring-boot-devtools'
+}
+
+test {
+	useJUnitPlatform()
+}
